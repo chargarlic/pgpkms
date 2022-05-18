@@ -45,7 +45,7 @@ class KmsPgpKey:
     -----------
 
     key_id (str, required):
-      The ID of the AWS KMS key. This can be one of the following:
+      The ID, ARN or alias of the AWS KMS key. This can be one of the following:
         - Key ID: e.g. "1234abcd-12ab-34cd-56ef-1234567890ab"
         - Key ARN: e.g. "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
         - Alias name: e.g. "alias/ExampleAlias"

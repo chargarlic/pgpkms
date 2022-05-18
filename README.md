@@ -48,8 +48,7 @@ _export_ the public key, or _sign_ a file:
 #### Options:
 
 * `-k <id>` or `--key <id>`
-  The ID of the key to use (defalts to the value of the `PGP_KMS_KEY` environment variable).
-  This can be one of:
+  The ID, ARN or alias of the key to use. This can be one of:
   * Key ID: e.g. `1234abcd-12ab-34cd-56ef-1234567890ab`
   * Key ARN: e.g. `arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab`
   * Alias name: e.g. `alias/ExampleAlias`
@@ -65,20 +64,25 @@ _export_ the public key, or _sign_ a file:
   Do not armour the output.
 
 * `--sha256` or `--sha384` or `--sha512`
-  Use the specified hashing algorithm (defaults to the value of the `PGP_KMS_HASH` environment variable or `sha256`).
+  Use the specified hashing algorithm.
+
+#### Environment Variables:
+
+* `PGP_KMS_KEY`: The default ID, ARN or alias of the key to use.
+* `PGP_KMS_HASH`: The hashing algorithm to use (default tp "sha256").
 
 #### Examples
 
 Export the (unarmoured) public key into the "trusted.gpg" file.
 
 ```bash
-$ main.py export --binary --output trusted.gpg
+$ python3 -m pgpkms export --binary --output trusted.gpg
 ```
 
 Sign the file "myfile.bin" and emit the armoured signature to stdout.
 
 ```bash
-$ runme.py sign --input myfile.bin
+$ python3 -m pgpkms sign --input myfile.bin
 ```
 
 
@@ -101,14 +105,10 @@ This is summarized as follows:
 The `KmsPgpKey` class wraps an AWS KMS key and is capable of producing
 signatures compatible with GnuPG / OpenPGP.
 
-* `key_id`: The ID of the AWS KMS key. This can be one of the following:
-  * Key ID: e.g. `1234abcd-12ab-34cd-56ef-1234567890ab`
-  * Key ARN: e.g. `arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab`
-  * Alias name: e.g. `alias/ExampleAlias`
-  * Alias ARN: `arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias`
+* `key_id`: The ID, ARN or alias of the AWS KMS key.
 
 * `kms_client`: A BotoCore _KMS_ client, if `None` this will be initialized as:
-  ```
+  ```python
   session = botocore.session.get_session()
   kms_client = session.create_client('kms')
   ```

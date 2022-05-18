@@ -23,7 +23,7 @@ def __help():
       -o, --output=<file>    Use the specified file as output instead of stdout.
       -i, --input <file>     Use the specified file as input instead of stdin.
       -b,--binary            Do not armour the output.
-      --sha[256|384|512]     Use the specified hashing algorithm
+      --sha[256|384|512]     Use the specified hashing algorithm.
 
     Environment Variables:
       PGP_KMS_KEY            The default ID, ARN or alias of the key to use.
