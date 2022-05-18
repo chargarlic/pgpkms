@@ -33,8 +33,8 @@ we can use a couple of _tags_ on the AWS key itself:
 Command Line Usage
 ------------------
 
-The [`main.py`](./main.py) file provides a quick, minimalistic command line
-to _export_ the public key, or _sign_ a document:
+The [`pgpkms.sh`](./pgpkms.sh) file provides a quick, minimalistic command line
+to _export_ the public key, or _sign_ a file:
 
 #### Usage:
 
