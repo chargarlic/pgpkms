@@ -7,8 +7,6 @@ from pyasn1_modules.rfc5280 import SubjectPublicKeyInfo
 from pyasn1.codec.der import decoder
 from time import time
 
-import pprint # TODO remove me
-
 from .armour import armour
 
 KEY_VERSION = b'\x04'
@@ -96,12 +94,6 @@ class KmsPgpKey:
         name = tag['TagValue']
       elif tag['TagKey'] == 'PGPEmail':
         email = tag['TagValue']
-
-    pprint.pprint(key) # TODO remove me
-    pprint.pprint(metadata) # TODO remove me
-    pprint.pprint(tags) # TODO remove me
-
-    print(metadata['KeyMetadata']['KeyId'])
 
     if (name != None) & (email != None):
       self.user_id = '%s <%s>' % (name, email)
