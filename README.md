@@ -42,8 +42,9 @@ _export_ the public key, or _sign_ a file:
 
 #### Commands:
 
-* `export`: Export the public key.
-* `sign`: Sign some data.
+* `export`: Export the public key in a PGP-compatible format.
+* `sign`: Sing some data and write a detached PGP signature.
+* `message`: Wrap a plaintext in a PGP message and sign it.
 
 #### Options:
 
@@ -61,7 +62,7 @@ _export_ the public key, or _sign_ a file:
   Use the specified file as input instead of stdin.
 
 * `-b` or `--binary`
-  Do not armour the output.
+  Do not armour the output (ignored when command is `message`).
 
 * `--sha256` or `--sha384` or `--sha512`
   Use the specified hashing algorithm.
@@ -113,6 +114,15 @@ signatures compatible with GnuPG / OpenPGP.
   kms_client = session.create_client('kms')
   ```
 
+#### `kmsPgpKey.to_pgp(hash='sha256', armoured=True, kms_client=None)`
+
+Return the public key from AWS KMS wrapped in an OpenPGP v4 key format as a
+`bytes` string.
+
+* `hash`: The hashing algorithm used to prepare the self-signature of the public key.
+* `armoured`: Whether the returned key should be armoured (text) or not (binary).
+* `kms_client`: A BotoCore _KMS_ client _(optional)_.
+
 #### `kmsPgpKey.sign(input, hash='sha256', armoured=True, kms_client=None)`
 
 Sign the specified input using this key, and return the signature in a format
@@ -126,11 +136,15 @@ compatible with GnuPG / OpenPGP as a `bytes` string.
 This method returns a `bytes` string containing the GnuPG / OpenPGP formatted
 signature.
 
-#### `kmsPgpKey.to_pgp(hash='sha256', armoured=True, kms_client=None)`
+#### `kmsPgpKey.message(input, output=None, hash='sha256', kms_client=None)`
 
-Return the public key from AWS KMS wrapped in an OpenPGP v4 key format as a
-`bytes` string.
+Sign the specified _TEXT_ input using this key, writing the signed message AND
+signature to the output specified.
 
-* `hash`: The hashing algorithm used to prepare the self-signature of the public key.
-* `armoured`: Whether the returned key should be armoured (text) or not (binary).
+* `input`: The data to be signed.
+* `output`: Where to write the output.
+* `hash`: The hashing algorithm used to sign the data.
 * `kms_client`: A BotoCore _KMS_ client _(optional)_.
+
+If output was `None`, this method returns a string containing the GnuPG /
+OpenPGP formatted message and signature.

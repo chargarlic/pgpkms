@@ -15,14 +15,15 @@ def __help():
     Usage: {cmd} <command> [options]
 
     Commands:
-      export  Export the public key.
-      sign    Sign some data.
+      export     Export the public key in a PGP-compatible format.
+      sign       Sing some data and write a detached PGP signature.
+      message    Wrap a plaintext in a PGP message and sign it.
 
     Options:
       -k, --key=<id>         The ID, ARN, or alias of the key to use.
       -o, --output=<file>    Use the specified file as output instead of stdout.
       -i, --input <file>     Use the specified file as input instead of stdin.
-      -b,--binary            Do not armour the output.
+      -b,--binary            Do not armour the output (igored for "message").
       --sha[256|384|512]     Use the specified hashing algorithm.
 
     Environment Variables:
@@ -37,7 +38,7 @@ def __help():
       Sign the file "myfile.bin" and emit the armoured signature to stdout.
         $ {cmd} sign --input myfile.bin
 
-  '''.format(cmd = cmd)) + '\n')
+  '''.format(cmd = cmd)) + os.linesep)
 
 # ==============================================================================
 
@@ -75,13 +76,28 @@ def __sign(key, hash, input = None, output = None, armoured = True):
 
 # ==============================================================================
 
+def __message(key, hash, input = None, output = None, armoured = True):
+  session = aws.get_session()
+  kms_client = session.create_client('kms')
+
+  key = KmsPgpKey(key, kms_client = kms_client)
+
+  i = open(input, 'r') if input else sys.stdin # text reads!
+  o = open(output, 'wb') if output else sys.stdout.buffer # write binary!
+
+  signature = key.message(i, o, hash = hash, kms_client = kms_client)
+
+  sys.exit(0)
+
+# ==============================================================================
+
 if __name__ == '__main__':
   if len(sys.argv) < 2:
     __help()
 
   command = sys.argv[1]
 
-  if not(command in [ 'help', 'export', 'sign' ]):
+  if not(command in [ 'help', 'export', 'sign', 'message' ]):
     sys.exit('Error: command "%s" unknown' % (command))
   elif command == 'help':
     __help()
@@ -120,7 +136,11 @@ if __name__ == '__main__':
   if not(hash in [ 'sha256', 'sha384', 'sha512' ]):
     sys.exit('Error: invalid hashing algorithm "%s"' % (hash))
 
-  { 'export': __export, 'sign': __sign }[command](
+  {
+    'export': __export,
+    'sign': __sign,
+    'message': __message,
+  }[command](
     key = key,
     hash = hash,
     input = input,
