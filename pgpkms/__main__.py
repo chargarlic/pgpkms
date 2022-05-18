@@ -8,51 +8,36 @@ from inspect import cleandoc
 from .pgpkms import KmsPgpKey
 
 def __help():
-  sys.exit(cleandoc('''\
-    Usage:
+  cmd = os.getenv('PGP_KMS_ARGV0', sys.argv[0])
+  cmd = 'python3 -m pgpkms' if cmd == __file__ else cmd
 
-      {cmd} <command> [options]
+  sys.exit(cleandoc('''\
+    Usage: {cmd} <command> [options]
 
     Commands:
-
       export  Export the public key.
       sign    Sign some data.
 
     Options:
+      -k, --key=<id>         The ID, ARN, or alias of the key to use.
+      -o, --output=<file>    Use the specified file as output instead of stdout.
+      -i, --input <file>     Use the specified file as input instead of stdin.
+      -b,--binary            Do not armour the output.
+      --sha[256|384|512]     Use the specified hashing algorithm
 
-      -k <id> | --key <id>
-        The ID of the key to use (defalts to the value of the
-        PGP_KMS_KEY environment variable).
-
-        This can be one of:
-
-          Key ID: e.g. "1234abcd-12ab-34cd-56ef-1234567890ab"
-          Key ARN: e.g. "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
-          Alias name: e.g. "alias/ExampleAlias"
-          Alias ARN: "arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias"
-
-      -o <file> | --output <file>
-        Use the specified file as output instead of stdout.
-
-      -i <file> | --input <file>
-        Use the specified file as input instead of stdin.
-
-      -b | --binary
-        Do not armour the output.
-
-      --sha256 | --sha384 | --sha512
-        Use the specified hashing algorithm (defaults to the
-        value of the PGP_KMS_HASH environment variable or "sha256").
+    Environment Variables:
+      PGP_KMS_KEY            The default ID, ARN or alias of the key to use.
+      PGP_KMS_HASH           The hashing algorithm to use (default tp "sha256").
 
     Examples
 
-      {cmd} export --binary --output trusted.gpg
-        Export the (unarmoured) public key into the "trusted.gpg" file.
+      Export the (unarmoured) public key into the "trusted.gpg" file.
+        $ {cmd} export --binary --output trusted.gpg
 
-      {cmd} sign --input myfile.bin
-        Sign the file "myfile.bin" and emit the armoured signature to stdout.
+      Sign the file "myfile.bin" and emit the armoured signature to stdout.
+        $ {cmd} sign --input myfile.bin
 
-  '''.format(cmd = os.getenv('PGP_KMS_ARGV0', sys.argv[0]))) + '\n')
+  '''.format(cmd = cmd)) + '\n')
 
 # ==============================================================================
 
