@@ -102,7 +102,7 @@ class KmsPgpKey:
     elif name != None:
       self.user_id = name
     else:
-      self.user_id = 'AwsPgpWrapper (%s)' % (metadata['KeyMetadata']['KeyId'])
+      self.user_id = 'PgpKms-AwsWrapper (%s)' % (metadata['KeyMetadata']['KeyId'])
 
     # Check the AWS "KeySpec" to assert type and length of the key
     key_spec = key['KeySpec']

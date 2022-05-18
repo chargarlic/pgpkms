@@ -19,8 +19,8 @@ Your mileage might vary (whether you use the AWS console, AWS cli, or tools like
 CloudFormation or Terraform) but overall any RSA "signing" key can be used.
 
 By default the _User ID_ associated with the key will be something along the
-lines of `AwsPgpWrapper (...uuid...)` where `uuid` is the random UUID associated
-with the key in KMS.
+lines of `PgpKms-AwsWrapper (...uuid...)` where `uuid` is the random UUID
+associated with the key in KMS.
 
 In order to properly specify a _User ID_ in the format of `Name <email@domain>`
 we can use a couple of _tags_ on the AWS key itself:
