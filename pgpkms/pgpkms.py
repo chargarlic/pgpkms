@@ -113,8 +113,7 @@ class KmsPgpKey:
                 4096 if key_spec == 'RSA_4096' else \
                 None
 
-    if self.bits == None:
-      raise AssertionError('Wrong spec %s for key %s' % (key_spec, self.arn))
+    assert self.bits is not None, 'Wrong spec %s for key %s' % (key_spec, self.arn)
 
     # Decode the ASN.1 structure to get modulo and exponent as numbers
     public_key = key['PublicKey']
@@ -212,8 +211,7 @@ class KmsPgpKey:
       (b'\x0a', 512, hashlib.sha512()) if hash == 'sha512' else \
       (None, None)
 
-    if hash_algorithm == None:
-      raise AssertionError('Wrong hash algorithm %s for signature' % (hash))
+    assert hash_algorithm, 'Wrong hash algorithm %s for signature' % (hash)
 
     # Start preparing the signature
     payload =  SIGNATURE_VERSION
@@ -332,8 +330,7 @@ class KmsPgpKey:
       (b'\x0a', 512, hashlib.sha512()) if hash == 'sha512' else \
       (None, None)
 
-    if hash_algorithm == None:
-      raise AssertionError('Wrong hash algorithm %s for signature' % (hash))
+    assert hash_algorithm, 'Wrong hash algorithm %s for signature' % (hash)
 
     # Start preparing the signature
     payload =  SIGNATURE_VERSION
@@ -435,8 +432,7 @@ class KmsPgpKey:
       (b'\x0a', 512, hashlib.sha512()) if hash == 'sha512' else \
       (None, None)
 
-    if hash_algorithm == None:
-      raise AssertionError('Wrong hash algorithm %s for signature' % (hash))
+    assert hash_algorithm, 'Wrong hash algorithm %s for signature' % (hash)
 
     # If "output" was None, we want to buffer the output and return a string...
     (return_string, output) = (True, BytesIO()) if output == None else (False, output)
@@ -555,8 +551,7 @@ def _KmsPgpKey__packet(tag: int, payload: bytes) -> bytes:
          2 if bits <= 32 else \
          None
 
-  if type == None:
-    raise AssertionError('Length %s too big for packet' % (bytes))
+  assert type is not None, 'Length %s too big for packet' % (bytes)
 
   length = \
     bytes.to_bytes(1, 'big') if type == 0 else \
@@ -575,8 +570,7 @@ def _KmsPgpKey__subpacket(type, value):
   payload = type + value
 
   length = len(payload)
-  if length > 191:
-    raise AssertionError('Length %s too big for subpacket' % (length))
+  assert length < 192, 'Length %s too big for subpacket' % (length)
 
   return length.to_bytes(1, 'big') + payload
 
