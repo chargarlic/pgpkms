@@ -462,6 +462,12 @@ class KmsPgpKey:
     # Encode a line in UTF-8 and write it to the output, followed by the
     # OS-dependent newline character...
     def __write_encoded(line):
+      # RFC4880, section 7.1: Dash-Escaped Text
+      if line.startswith('-'):
+        line = '- ' + line
+      line = line.rstrip('\t ')
+
+      # Now we have a somewhat proper string
       encoded = line.encode('utf-8')
       output.write(encoded)
       output.write(eol)
