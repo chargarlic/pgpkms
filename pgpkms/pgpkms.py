@@ -480,9 +480,9 @@ class KmsPgpKey:
       hasher.update(b'\r\n')
 
     # Message preamble
-    __write_encoded('-----BEGIN PGP SIGNED MESSAGE-----')
-    __write_encoded('Hash: SHA%s' % (hash_length))
-    __write_encoded('')
+    output.write('-----BEGIN PGP SIGNED MESSAGE-----'.encode('utf-8') + eol)
+    output.write(('Hash: SHA%s' % (hash_length)).encode('utf-8') + eol)
+    output.write(eol)
 
     # Process lines, depending on input type
     if isinstance(input, str):
