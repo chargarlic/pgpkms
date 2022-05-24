@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 test -f "$(dirname ${0})/.env" && {
   set -a
   source "$(dirname ${0})/.env"
@@ -33,10 +35,10 @@ mkdir -p "./dist/deb/usr/bin"
 mkdir -p "./dist/deb/etc/default"
 mkdir -p "./dist/deb/usr/share/doc/python3-pgpkms"
 
-install --mode=755 pgpkms.sh "./dist/deb/usr/bin/pgpkms"
-install --mode=644 README.md "./dist/deb/usr/share/doc/python3-pgpkms/README.md"
-install --mode=644 NOTICE.md "./dist/deb/usr/share/doc/python3-pgpkms/NOTICE.md"
-install --mode=644 LICENSE.md "./dist/deb/usr/share/doc/python3-pgpkms/LICENSE.md"
+install --mode=755 ./bin/pgpkms "./dist/deb/usr/bin/pgpkms"
+install --mode=644 ./README.md "./dist/deb/usr/share/doc/python3-pgpkms/README.md"
+install --mode=644 ./NOTICE.md "./dist/deb/usr/share/doc/python3-pgpkms/NOTICE.md"
+install --mode=644 ./LICENSE.md "./dist/deb/usr/share/doc/python3-pgpkms/LICENSE.md"
 
 cat >> "./dist/deb/etc/default/pgpkms" <<-EOF
 	# PGP_KMS_KEY specifies the default key ID for "pgpkms"
