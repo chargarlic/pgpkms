@@ -77,7 +77,7 @@ class KmsPgpKey:
       kms_client = session.create_client('kms')
 
     # Get the key and remember the ARN
-    key = kms_client.get_public_key(KeyId="alias/PGP_KEY")
+    key = kms_client.get_public_key(KeyId="alias/RELEASE_SIGNING_KEY")
     self.arn = key['KeyId']
 
     # Get metadata and tags
