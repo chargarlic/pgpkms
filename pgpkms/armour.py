@@ -26,8 +26,7 @@ def armour(header: str, payload: bytes) -> str:
   checksum = standard_b64encode(__crc24(payload)).decode('utf-8')
 
   wrapped.insert(0, '-----BEGIN PGP %s-----' % (header))
-  wrapped.insert(1, 'Version: PgpKms-AwsWrapper v1')
-  wrapped.insert(2, '')
+  wrapped.insert(1, '')
   wrapped.append('=%s' % (checksum))
   wrapped.append('-----END PGP %s-----' % (header))
   wrapped.append('') # final newline!
